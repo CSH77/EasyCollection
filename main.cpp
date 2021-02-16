@@ -3,50 +3,48 @@
 #include <vector>
 #include <queue>
 #include <map>
+#include <algorithm>
 
 using namespace std;
 
 class Solution {
 public:
     void rotate(vector<int>& nums, int k) {
-        //rotate, use mod to calcualte rotating point
-        // int rotatingPoint = nums.size() % k;
 
         vector<int> temp;
-         int rotatingPoint = k;
-        //rotation step is bigger than total size
-        if(k > nums.size())
-        {
-            rotatingPoint = k % nums.size();
-        }
+        int rotatingPoint = k % nums.size();
 
-        //count from rear.
-        rotatingPoint = nums.size() - rotatingPoint;
+        //if rotating point is 0, do not need rotation.
+        if(rotatingPoint == 0)
+            return;
 
-        int i = rotatingPoint;
-        while(i < nums.size())
-        {
-            temp.push_back(nums[i]);
-            i++;
-        }
+        //reverse input,
+        reverse(nums.begin(), nums.end());
 
-        i = 0;
-        while(i < rotatingPoint)
+        //rotate again from first element to rotating point.
+        int counter = 0;
+        for(auto iter = nums.begin(); iter != nums.end(); iter++)
         {
-            temp.push_back(nums[i]);
-            i++;
+            if(counter == rotatingPoint)
+            {
+                //reverse from start to this point.
+                reverse(nums.begin(), iter);
+
+                //reverse from rotating point to end of elements
+                reverse(iter, nums.end());
+            }
+            counter++;
         }
-        // nums.assign(temp.begin(), temp.end());
-        nums = temp;
     }
 };
 
 int main()
 {
-    vector<int> input = {1,2,3,4,5,6,7};
+    // vector<int> input = {1,2,3,4,5,6,7};
+    vector<int> input = {1,2};
 
     Solution obj;
-    obj.rotate(input, 3);
+    obj.rotate(input, 2);
 
     for(auto item : input)
     {
